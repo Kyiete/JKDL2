@@ -1,0 +1,142 @@
+---
+title: "RExercise#2_Divinagracia"
+author: "John Kyiete Divinagracia"
+date: "2026-10-02"
+output: html_document
+---
+{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```{r}
+a <- 17
+b <- 5
+a + b
+a - b
+a * b
+a / b
+
+a %% b
+a %/% b
+```
+Q1: When we divide 17 by 5, we get 3.4 as the exact result. The integer division  17 %/% 5  gives 3, which is the whole-number part, and  17 %% 5  gives 2, the remainder left over. Together they show that 17 equals 5 multiplied by 3 plus 2, and the decimal part 0.4 comes from dividing the remainder 2 by 5.
+Q2: I predicted  10 %% 3  would be 1 and  10 %/% 3  would be 3, because 10 divided by 3 gives 3 whole times with 1 left over. I was correct because 3 × 3 = 9, so the remainder is indeed 1. If I had been wrong, it would have meant I mixed up which operator finds the remainder and which finds the whole number.
+
+```{r}
+x <- 42
+y <- 42L      
+z <- "42"
+w <- TRUE
+v <- 3 + 2i
+
+typeof(x)
+typeof(y)
+typeof(z)
+typeof(w)
+typeof(v)
+
+class(x)
+class(y)
+class(z)
+class(w)
+class(v)
+
+mode(x)
+mode(y)
+mode(z)
+mode(w)
+mode(v)
+```
+Q3:  x <- 42  and  y <- 42L  both show the same number when printed, but they are stored differently inside R. The first one becomes a double — R’s default numeric type that can hold decimals too. The  L  in  42L  forces it to be an integer, which stores only whole numbers without decimal space. Even though they look identical,  typeof()  reveals these two separate storage types clearly.
+Q4: Yes,  typeof()  can be different from  class()  and  mode()  for the same object, especially with structured data. For example, a matrix may have  typeof()  as "integer" or "double" but  class()  as "matrix" and  mode()  as "numeric". Similarly, a factor is stored internally as integers, yet its class is "factor" and mode is "numeric". Simply put,  typeof()  shows raw storage,  mode()  shows broad category, and  class()  shows how R treats the object — so they often differ.
+
+```{r}
+num_string <- "123"
+as.numeric(num_string)
+typeof(num_string)
+class(num_string)
+mode(num_string)
+
+as.logical(0)
+as.logical(1)
+```
+Q5:
+ 
+Why warning instead of crashing?
+ 
+R is designed to keep running so the rest of your code can still work even when one part encounters a problem. This approach lets you process datasets with mixed or messy values without stopping entirely on just one bad entry. It gives you feedback through a warning so you know something went wrong, but it doesn’t block your whole workflow. This flexibility is especially helpful when working with large real-world data where errors are common.
+ 
+Risks if you ignore warnings?
+ 
+If you don’t read warnings, you might not realize that some values became  NA  instead of the numbers you expected. Your calculations will silently use missing data, producing results that look complete but are actually incorrect or incomplete. This can lead to wrong conclusions or decisions based on unreliable numbers. You might waste time analyzing output without ever knowing part of your data failed to convert properly.
+
+Q6:
+ 
+Prediction
+ 
+I think  as.logical(2)  will return  TRUE  and  as.logical(-1)  will also return  TRUE .
+ 
+Test & Rule
+ 
+When you run it, both  as.logical(2)  and  as.logical(-1)  indeed give  TRUE . The rule R follows is very simple: zero converts to  FALSE , and any number that is not zero — whether positive or negative — converts to  TRUE . This means only  0  becomes  FALSE , while every other numeric value becomes  TRUE  when converted to logical.
+ 
+```{r}
+ first_name <- "Juan"
+last_name <- "Dela Cruz"
+
+print(first_name)
+print(last_name)
+
+paste(first_name,last_name)
+paste0(first_name,last_name)
+
+paste(first_name,last_name,sep = "-")
+
+age <- 21
+full_name <- paste(first_name,last_name)
+paste(full_name,"is",age,"years old")
+```
+Q7: paste()  automatically puts a space between items by default, while  paste0()  puts nothing between them. That means  paste("Juan", "Dela Cruz")  gives  "Juan Dela Cruz"  with a space, but  paste0("Juan", "Dela Cruz")  gives  "JuanDelaCruz"  with no gap at all. The difference comes from their default separator:  paste()  uses  sep = " "  and  paste0()  uses  sep = "" . They are designed for different jobs — one for readable text with spaces, the other for tight joining without extra characters.
+
+Q8:This did NOT cause an error.  paste()  automatically converts any number it receives into a character string behind the scenes so everything can be joined together as text. This is similar to the type conversions you practiced earlier, like  as.character() , except  paste()  does it silently and automatically. It’s convenient because you don’t have to manually convert every number first, but it also means you should double-check your output to make sure the conversion happened the way you intended.
+```{r}
+as.numeric("5") + 5
+```
+Q9
+ 
+R requires explicit conversion because it treats data types strictly and deliberately, so it never guesses what you meant. A value like  "5"  could be text or a number, and automatic conversion could silently change your data and produce wrong results without you noticing. By making you use functions like  as.numeric() , R ensures you decide when and how types change. This protects your work from hidden errors and keeps your code clear and predictable.
+ 
+ 
+ 
+Q10:
+ 
+The column likely looks like numbers but is actually stored as character or factor type, so  sum()  can’t perform math on it. First, check the type with  typeof() ,  class() , or  mode()  to confirm it’s not numeric. If it’s character, convert it using  as.numeric()  — if you get  NA  values and a warning, some entries have non-numeric text like symbols or letters. Then check for those problematic values, fix or remove them, and convert again before running  sum() .
+ 
+ 
+ 
+Conclusion
+ 
+I learned that R carefully distinguishes between data types like numeric, character, logical, and integer, and each behaves differently in operations. Understanding  typeof() ,  class() , and  mode()  helps you see exactly what kind of data you’re working with and avoid surprises. Type conversion functions like  as.numeric()  and  as.character()  let you change data intentionally, which is essential before doing math or joining values together. Knowing these basics prevents errors, makes your code reliable, and ensures you truly understand your data.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
