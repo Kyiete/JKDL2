@@ -1,0 +1,116 @@
+---
+title: "RExercise#4_Divinagracia"
+author: "John Kyiete Divinagracia"
+date: "2026-10-16"
+output: html_document
+---
+PART A - Creating Vectors and List
+Question #1
+```{r}
+# a. Create vector
+age <- c(34, 28, 22, 36, 27, 18, 52, 39, 42, 29, 35, 31, 27, 22, 37, 34, 19, 20, 57, 49, 50, 37, 46, 25, 17, 37, 43, 53, 41, 51, 35, 24, 33, 41, 53, 40, 18, 44, 38, 41, 48, 27, 39, 19, 30, 61, 54, 58, 26, 18)
+
+# b. How many data points?
+length(age)
+
+
+# c. Min and Max values
+min(age) 
+max(age)  
+
+# d. Access 13rd to 18th AND 33th to 35th elements
+age[c(13:18, 33:35)]
+
+
+# e. All but 10th, 20th, 30th, and 40th elements
+age[-c(10, 20, 30, 40)]
+
+# f. Modify 4th, 14th, 24th, and 44th elements to 0
+age[c(4, 14, 24, 44)] <- 0
+age
+```
+Question#2
+```{r}
+# Load built-in dataset
+data(rivers)
+
+##A. Get the number of elements (length) in rivers, their sum (sum), mean (mean), median(median), variance(var), standard deviation(sd), minimum (min) and maximum (max).
+# Store all results in one vector
+rivers_stats <- c(
+  length = length(rivers),
+  sum = sum(rivers),
+  mean = mean(rivers),
+  median = median(rivers),
+  variance = var(rivers),
+  sd = sd(rivers),
+  min = min(rivers),
+  max = max(rivers)
+)
+##B. What is the result? The derived result must be in just one(1) vector name.
+# Display result
+rivers_stats
+```
+Question#3
+```{r}
+# Create vectors
+celeb_name <- c("Dwayne Johnson", "Taylor Swift", "J.K. Rowling", "Cristiano Ronaldo", "Lionel Messi")
+power_ranking <- c(1, 2, 3, 4, 5)
+annual_pay <- c(87.5, 80.0, 95.0, 105.0, 110.0)
+
+# Modify J.K. Rowling's ranking and pay
+idx <- which(celeb_name == "J.K. Rowling")
+power_ranking[idx] <- 15
+annual_pay[idx] <- 90
+
+# Check updated values
+celeb_name
+power_ranking
+annual_pay
+```
+Question#4
+```{r}
+# a. Create vector
+vegetables <- c("Carrot", "Broccoli", "Spinach", "Cabbage", "Tomato",
+                "Onion", "Eggplant", "Pechay", "Squash", "String Beans")
+vegetables
+
+# b. Add 2 vegetables at the end
+vegetables <- append(vegetables, c("Potato", "Radish"))
+vegetables
+
+# c. Number of data points
+length(vegetables)
+
+# d. Add 4 vegetables after index 5
+vegetables <- append(vegetables, c("Bell Pepper", "Garlic", "Ginger", "Okra"), after = 5)
+vegetables
+
+# e. Final count
+length(vegetables)
+```
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
