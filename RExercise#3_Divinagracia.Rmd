@@ -1,0 +1,292 @@
+---
+title: "RExercise#3_Divinagracia"
+author: "John Kyiete Divinagracia"
+date: "2026-10-16"
+output: html_document
+---
+Part A — Creating Vectors:  c() ,  seq() ,  rep() 
+```{r}
+scores <- c(88, 92, 79, 95, 84)
+subjects <- c("Math", "Science", "English", "History", "PE")
+
+odds <- seq(1, 19, by = 2)
+
+even_spaced <- seq(0, 1, length.out = 5)
+
+rep_a <- rep("A", times = 4)              
+
+rep_each <- rep(c("A", "B"), each = 2)    
+
+rep_times <- rep(c("A", "B"), times = 2)   
+ 
+```
+ 
+ 
+Question #1
+ 
+```{r}
+  
+age <- c(15, 28, 32, 36, 27, 18, 52, 39, 42, 29, 35, 31, 27, 22, 37, 34, 19, 20, 57, 49, 50, 37, 46, 25, 17, 12, 42, 53, 41, 51, 35, 24, 33, 8)
+
+length(age)
+reciprocal_age <- 1 / age
+reciprocal_age
+new_age <- c(age, 0, age)
+new_age
+min(age)
+max(age)  
+```
+ 
+ 
+Question #2 — Difference between  each  and  times 
+ 
+ each = 2  repeats each individual element twice before moving to the next element — so  "A"  repeats twice, then  "B"  repeats twice →  A A B B .
+ 
+ times = 2  repeats the entire sequence as a whole — the pair  A B  is repeated →  A B A B .
+ 
+ 
+Question #3 —  by  vs  length.out 
+ 
+ by = 2  controls the step size — the fixed gap between consecutive numbers. It's best used when you know exactly how far apart your values should be, like counting by a consistent interval.
+ 
+ length.out = 5  controls the total number of values — R automatically calculates the spacing so you get exactly that many evenly spaced points. You use this when you need a specific number of data points regardless of the interval between them.
+ 
+ 
+ 
+Question #4 — Sequence 20 to 60
+ 
+```{r}
+  
+vec_num <- seq(20, 60)
+
+mean(vec_num)
+
+
+sum(vec_num)
+
+length(vec_num)
+```
+ 
+ 
+Part B — Subsetting (Accessing) Vectors
+ 
+```{r}
+grades <- c(88, 92, 79, 95, 84)
+names(grades) <- c("Math", "Science", "English", "History", "PE")
+
+grades[3]
+
+grades[c(1, 4)]
+
+grades[c("Science", "PE")]
+
+grades[-c(1, 4)]
+
+grades[grades >= 85]
+```
+ 
+ 
+Question #5 — When to use which indexing method
+ 
+Negative indexing is useful when you know exactly which positions to remove — for example, excluding an outlier or a header row at the start of your data, or removing the last element that doesn't fit the pattern. It's quick when you know the positions you don't want.
+ 
+Logical indexing is better when you filter by values or conditions — like keeping only survey responses above a certain score, selecting sales figures that meet a target, or filtering missing/extreme values. It's more flexible because it works on the data itself rather than just its location.
+ 
+ 
+ 
+Question #6 — What happens with  grades[10] ?
+ 
+grades[10]
+ 
+ 
+R returns  NA  instead of throwing an error. R does this because vectors are designed to always return something of the expected type — if the position doesn't exist, it returns  NA  (Not Available) as a placeholder. This way your code doesn't crash entirely, and you can handle missing or invalid positions gracefully.
+ 
+ 
+Question #7 — Filter numbers not divisible by 3, 5, and 7
+ 
+```{r}
+result <- Filter(function(i) { all(i %% c(3,5,7) != 0) }, seq(100))
+print(result)
+```
+ 
+ 
+Output:
+ 
+1, 2, 4, 8, 11, 13, 16, 17, 19, 22, 23, 26, 29, 31, 32, 34, 37, 38, 41, 43, 44, 46, 47, 52, 53, 57, 58, 61, 62, 64, 67, 68, 71, 73, 74, 76, 79, 82, 83, 86, 88, 89, 92, 94, 97
+ 
+ 
+ 
+Part C — Vector Operations and  append()
+
+
+```{r}
+x <- c(1, 2, 3, 4)
+y <- c(10, 20, 30, 40)
+
+# Add element-wise
+x + y
+
+# Multiply every element by 2
+x * 2
+
+
+z <- c(1, 2, 3, 4, 5, 6)
+short <- c(1, 0)
+
+# Different lengths — observe recycling
+z + short
+
+# Warning message may appear: longer object length is not a multiple of shorter object length
+
+fruits <- c("apple", "banana", "cherry")
+
+# Add to end
+fruits <- append(fruits, "date")
+
+
+# Insert between apple and banana
+fruits <- append(fruits, "kiwi", after = 1)
+```
+
+ 
+ 
+Question #8 — Recycling Rule
+ 
+R automatically repeats the shorter vector until it matches the length of the longer one. In this case,  c(1, 0)  was repeated three times:  1, 0, 1, 0, 1, 0 , then added element by element to  z . This is convenient but can hide mistakes if you don't notice it's happening!
+ 
+ 
+ 
+Question #9 — Recycling conditions
+ 
+```{r}
+z <- c(1, 2, 3, 4, 5, 6)
+
+z + c(1, 0, 1)
+
+z + c(1, 0, 1, 1)
+```
+ 
+Rule: R recycles silently when the longer vector's length is an exact multiple of the shorter one. If not exact, it still recycles but shows a warning — alerting you that the shorter vector was cut off partway through, which might be an accident.
+ 
+ 
+ 
+Part D — Lists: Creating and Subsetting
+ 
+```{r}
+
+  
+# Create the list
+student <- list(
+  name = "Maria Santos",
+  age = 20,
+  grades = c(88, 92, 79),
+  is_enrolled = TRUE
+)
+
+# Single brackets [ ] — returns a sub-list
+student["grades"]
+class(student["grades"])       
+
+# Double brackets [[ ]] — returns the actual contents
+student[["grades"]]
+class(student[["grades"]])     
+
+
+# $ operator
+student$name                   
+
+
+# Second grade only
+student[["grades"]][2]         
+# OR
+student$grades[2]              
+```
+ 
+ 
+ 
+ 
+Question #10 — Single vs Double Brackets in Lists
+ 
+ [ ]  (single bracket) always returns a smaller list — it gives you a slice of the list, still wrapped as a list object. You can select multiple elements this way.
+ 
+ [[ ]]  (double bracket) digs deeper — it returns the actual value stored inside, unwrapped from the list container. You can only get one element at a time this way.
+ 
+Think of it like a box:  [ ]  gives you the box with the item still inside it;  [[ ]]  takes the item out of the box and hands it directly to you.
+ 
+ 
+ 
+Question #11 — Why the distinction for lists?
+ 
+Vectors hold only one type of data and all elements are the same kind — so  [ ]  simply returns another vector. But lists can hold ANYTHING — numbers, text, vectors, even other lists — all mixed together. Each element might be a completely different type and structure. R needs two operators because what's inside a list element might be very different from the list structure itself. So  [ ]  keeps the list structure, while  [[ ]]  peels it away to reveal whatever is stored inside.
+ 
+ 
+ 
+Part E — Critical Thinking Challenge
+ 
+```{r}
+  
+inventory <- list(
+  item = c("Notebook", "Pen", "Eraser"),
+  price = c(25.50, 10.00, 5.00),
+  in_stock = c(TRUE, TRUE, FALSE)
+)
+
+# Show items that are IN STOCK
+inventory$item[inventory$in_stock == TRUE]
+# OR simply:
+inventory$item[inventory$in_stock]
+# Result: "Notebook" "Pen"
+
+# Add new product "Ruler"
+inventory$item <- append(inventory$item, "Ruler")
+inventory$price <- append(inventory$price, 15.00)
+inventory$in_stock <- append(inventory$in_stock, TRUE)
+```
+ 
+ 
+ 
+Question #12 — Why indexing works across separate vectors in a list
+ 
+It works because both vectors inside the list follow the same order/positioning. Position 1 in  item  corresponds to Position 1 in  in_stock , and so on. When you use  inventory$in_stock , you get a sequence like  TRUE, TRUE, FALSE . Using that sequence inside the brackets  [ ]  keeps only the items at positions where the condition is TRUE — the positions line up perfectly even though they're separate objects.
+ 
+ 
+ 
+Question #13 — Risks of separate vectors vs a single list
+ 
+Risks of separate vectors: If you sort or reorder one vector but forget to reorder the others, everything becomes misaligned — Pen's price might show up under Notebook, or stock status gets attached to the wrong item. Those are hard bugs to catch. Adding new items also means updating three separate places.
+ 
+Why use a list instead: A list keeps related data grouped together — it represents one logical unit (your inventory). Everything moves together, so sorting or filtering stays consistent. It's cleaner, safer, and easier to manage as your data grows. Later, you'll upgrade this to a data frame — which is basically a list of equal-length vectors that automatically stay aligned!
+ 
+ 
+ 
+Conclusion — Vectors vs Lists
+ 
+Vectors store only one type of data — all numbers or all text — and every element stands alone. They're fast and simple, perfect for columns of uniform data like test scores or ages.
+ 
+Lists can mix anything — text, numbers, dates, even other lists — all in one container. They're for grouping different pieces that belong together, like all the info about one person or one product.
+ 
+Choose vectors when your data is all the same type and just a simple sequence. Choose lists when you need to bundle different kinds of information into one meaningful object.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
