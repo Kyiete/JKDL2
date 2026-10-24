@@ -1,0 +1,217 @@
+---
+title: "RExercise#5_Divinagracia"
+author: "John Kyiete Divinagracia"
+date: "2026-10-24"
+output: html_document
+---
+Part A — Creating Matrices 
+```{r}
+  
+# Create m1
+m1 <- matrix(1:9, nrow = 3, ncol = 3)
+m1
+
+# Create m2
+m2 <- matrix(1:9, nrow = 3, ncol = 3, byrow = TRUE)
+m2
+
+# Scores matrix
+scores <- matrix(c(88, 92, 79, 95, 84, 90), nrow = 2, ncol = 3, byrow = TRUE)
+rownames(scores) <- c("Quiz1", "Quiz2")
+colnames(scores) <- c("Ana", "Ben", "Cid")
+scores
+
+```
+ 
+Question #1
+ byrow = TRUE  tells R to fill the matrix one row at a time instead of one column at a time. Without this argument, R always fills down the columns first by default.
+ 
+Question #2
+When I run  matrix(1:8, nrow = 3, ncol = 3) , R gives me a warning saying "data length [8] is not a multiple of the number of rows [3]". It still creates the matrix, but it just repeats the first value to fill the last empty spot. So the number 1 appears twice at the end. This means R will recycle values if your data doesn't fit perfectly, but it lets you know something might be wrong.
+ 
+ 
+ 
+Part B — Subsetting Matrices
+ 
+```{r}
+  
+# Access row 1, column 2
+scores[1, 2]
+
+# Access entire first row
+scores[1, ]
+
+# Access "Ben" column
+scores[, "Ben"]
+
+# Values >= 90
+scores[scores >= 90]
+``` 
+ 
+Question #3
+When I run  class()  on both results, they both return  "numeric"  — not a matrix anymore. R automatically turns a single row or column into a simple vector because a single line of values is just a list of numbers, not a table. It simplifies the result because you don't always need the full 2D structure when you're only working with one row or column.
+ 
+Question #4
+When we use  scores[scores >= 90] , R returns a vector instead of keeping the table shape. That's because logical checking works element by element — it doesn't keep track of which row or column each number came from. Since the result is no longer organized in rows and columns, there's nowhere to attach the names, so they disappear.
+ 
+ 
+ 
+Part C — Matrix Properties and Operations
+ 
+```{r}
+  
+# Dimensions
+dim(scores)
+nrow(scores)
+ncol(scores)
+
+# Transpose
+scores_t <- t(scores)
+scores_t
+dim(scores_t)
+
+# Element-wise operations
+a <- matrix(1:4, nrow = 2)
+b <- matrix(5:8, nrow = 2)
+a + b
+a * b
+
+# True matrix multiplication
+a %*% b
+ 
+``` 
+Question #5
+ a * b  multiplies numbers that are in the exact same position in each matrix — first position times first position, second times second, and so on.  a %*% b  works differently — it multiplies rows from the first matrix by columns from the second matrix and then adds those products together. These are completely different mathematical operations that give different answers.
+ 
+Question #6
+When you transpose a matrix, rows become columns and columns become rows. So the names have to swap too — what was a row name is now a column name, and what was a column name is now a row name. Otherwise the labels wouldn't match the data anymore.
+ 
+ 
+ 
+Part D — cbind() and rbind()
+ 
+```{r}
+  
+# Add Dex as new column
+scores_v2 <- cbind(scores, Dex = c(85, 91))
+scores_v2
+
+# Add Quiz3 as new row
+scores_v3 <- rbind(scores, Quiz3 = c(80, 88, 93))
+scores_v3
+``` 
+ 
+Question #7
+When I tried  cbind(scores, c(85, 91, 100)) , I got an error saying the number of rows doesn't match.  cbind()  needs the new column to have exactly as many values as there are rows in the matrix. Similarly,  rbind()  needs the new row to have exactly as many values as there are columns. If the lengths don't match, R can't fit them together properly, so it stops and tells you why.
+ 
+Question #8
+I would use  rbind()  when I'm adding new records or new observations that have the same set of categories as what I already have. For example, if I keep a weekly sales record where each row is one week and each column is one store, I would use  rbind()  every Monday to add last week's sales as a new row. That way I keep building my list over time.
+ 
+ 
+ 
+Part E — Arrays: Creating and Subsetting
+ 
+```{r}
+  
+# Create array
+arr <- array(1:12, dim = c(2, 3, 2))
+arr
+
+# Access row 1, column 2, second layer
+arr[1, 2, 2]
+
+# Access entire first layer
+arr[ , , 1]
+
+# Check dimensions
+dim(arr)
+``` 
+ 
+Question #9
+ dim(arr)  shows three numbers. The first one is the number of rows in each layer, the second is the number of columns in each layer, and the third is how many layers or matrices there are stacked together.
+ 
+Question #10
+A good example would be temperature readings taken at different times of day, in different rooms, on different days. The rows could be times of day, the columns could be rooms, and the third dimension could be days. A regular matrix wouldn't be enough because you'd need a separate table for each day, but an array lets you keep all days together in one place.
+ 
+ 
+ 
+Part F — Critical Thinking Challenge
+ 
+```{r}
+  
+class_a <- matrix(c(85, 90, 78, 92), nrow = 2, byrow = TRUE,
+                   dimnames = list(c("S1", "S2"), c("Midterm", "Final")))
+class_b <- matrix(c(88, 84, 95, 91), nrow = 2, byrow = TRUE,
+                   dimnames = list(c("S3", "S4"), c("Midterm", "Final")))
+
+# Combine matrices
+all_students <- rbind(class_a, class_b)
+all_students
+
+# Calculate averages
+rowMeans(all_students)
+``` 
+ 
+Question #11
+I chose  rbind()  because both matrices have the same columns — Midterm and Final — but different students. That means I'm adding more rows, not more columns. If the shared names were in the rows instead, I would have used  cbind() .
+ 
+Question #12
+I would use  rbind()  to stack all five matrices on top of each other since they all measure the same two things for different groups of students. After combining them, I would check  dim()  to make sure the final number of rows equals the total students across all five classes, and that the number of columns is still exactly 2 — Midterm and Final.
+ 
+ 
+ 
+Conclusion
+ 
+A matrix works with two dimensions — rows and columns — while an array can handle three or more dimensions. Matrices are basically just one layer of an array. You would use  cbind()  whenever you need to add new categories or measurements to your data, and  rbind()  whenever you need to add more records or observations to what you already have. Both are helpful for building up datasets piece by piece over time.
+
+Part F — Critical Thinking Challenge
+ 
+```{r}
+class_a <- matrix(c(85, 90, 78, 92), nrow = 2, byrow = TRUE,
+                   dimnames = list(c("S1", "S2"), c("Midterm", "Final")))
+class_b <- matrix(c(88, 84, 95, 91), nrow = 2, byrow = TRUE,
+                   dimnames = list(c("S3", "S4"), c("Midterm", "Final")))
+
+# Combine matrices
+all_students <- rbind(class_a, class_b)
+all_students
+
+# Calculate averages
+rowMeans(all_students)
+``` 
+ 
+Question #11
+I chose  rbind()  because both matrices have the same columns — Midterm and Final — but different students. That means I'm adding more rows, not more columns. If the shared names were in the rows instead, I would have used  cbind() .
+ 
+Question #12
+I would use  rbind()  to stack all five matrices on top of each other since they all measure the same two things for different groups of students. After combining them, I would check  dim()  to make sure the final number of rows equals the total students across all five classes, and that the number of columns is still exactly 2 — Midterm and Final.
+ 
+ 
+ 
+Conclusion
+ 
+A matrix works with two dimensions — rows and columns — while an array can handle three or more dimensions. Matrices are basically just one layer of an array. You would use  cbind()  whenever you need to add new categories or measurements to your data, and  rbind()  whenever you need to add more records or observations to what you already have. Both are helpful for building up datasets piece by piece over time.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
