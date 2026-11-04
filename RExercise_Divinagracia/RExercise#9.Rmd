@@ -1,0 +1,204 @@
+---
+title: "RExercise#9_Divinagracia"
+author: "John Kyiete Divinagracia"
+date: "2026-11-04"
+output: html_document
+---
+Part A — Creating Data Frames Lab
+ 
+ 
+ 
+Question #1
+ 
+Create data frame and save as CSV:
+ 
+```{r}
+  
+shoes <- data.frame(
+  Gender = c("Male", "Male", "Male", "Male", "Female", "Female", "Female", "Female"),
+  ShoeSize = c(10.5, 11, 11.5, 12, 7, 7.5, 8, 8.5),
+  Height = c(175, 178, 182, 185, 160, 163, 165, 168)
+)
+write.csv(shoes, "shoesize.csv", row.names = FALSE)
+``` 
+ 
+Answer: File saved successfully.
+ 
+ 
+ 
+Import CSV and show last 5 rows:
+ 
+```{r}
+  
+shoes <- read.csv("shoesize.csv")
+tail(shoes)
+ 
+``` 
+Answer: Last 5 rows are displayed.
+ 
+ 
+ 
+Describe the data:
+ 
+```{r}
+  
+str(shoes)
+shoes
+ 
+``` 
+Answer: 8 rows, 3 columns. Gender = text, ShoeSize = numbers, Height = numbers.
+
+ 
+ 
+Check dimensions:
+ 
+```{r}
+  
+dim(shoes)
+nrow(shoes)
+ncol(shoes)
+``` 
+ 
+Answer: 8 rows, 3 columns.
+ 
+ 
+ 
+Use summary():
+ 
+```{r}
+  
+summary(shoes)
+``` 
+ 
+Answer:  summary()  shows averages, min, max.  str()  only shows what type of data each column is.
+ 
+ 
+ 
+Subset males and females:
+ 
+```{r}
+  
+males <- subset(shoes, Gender == "Male", c(ShoeSize, Height))
+females <- subset(shoes, Gender == "Female", c(ShoeSize, Height))
+males
+females
+``` 
+     
+Answer: Two separate tables — one for males, one for females.
+ 
+ 
+ 
+Find the mean:
+ 
+```{r}
+  
+mean(shoes$ShoeSize)
+mean(shoes$Height)
+``` 
+     
+Answer: Mean shoe size = 9.5, Mean height = 172 cm.
+ 
+ 
+ 
+Relationship between shoe size and height?
+Answer: Yes. Bigger shoe size usually means taller height. Taller people need bigger feet.
+ 
+ 
+ 
+Question #2
+ 
+Make Gender a factor:
+ 
+```{r}
+  
+shoes$Gender <- factor(shoes$Gender)
+shoes$Gender
+ 
+``` 
+Answer: Gender is now a category with 2 groups: Female, Male.
+ 
+ 
+ 
+Question #3
+ 
+Why does .Rmd use its own folder?
+Answer: So when you share the file, the person receiving it doesn't have to rearrange folders. The code works the same on any computer — no broken file paths.
+ 
+ 
+ 
+Question #4
+ 
+Check column types:
+ 
+```{r}
+  
+str(shoes)
+``` 
+       
+Answer: Gender is text/character — that's fine. But if ShoeSize was text instead of numbers, you couldn't calculate averages or do math on it. R would treat "10" as letters, not a number.
+ 
+ 
+ 
+Question #5
+ 
+Why check both head() and tail()?
+Answer:  head()  only shows the top. The bottom of your file might be empty, have wrong data, or extra notes.  tail()  catches problems at the end that  head()  would miss.
+ 
+ 
+ 
+Question #6
+ 
+Correlation:
+ 
+```{r}
+  
+cor(shoes$ShoeSize, shoes$Height)
+ 
+``` 
+Answer: ~0.98 — very strong positive link. Bigger shoe size = taller height.
+ 
+Shoe size 11 and up:
+ 
+```{r}
+  
+subset(shoes, ShoeSize >= 11)
+ 
+``` 
+Answer: Shows all people with shoe size 11 or larger.
+ 
+ 
+ 
+Question #7
+ 
+```{r}
+  
+mean(males$ShoeSize)
+mean(males$Height)
+mean(females$ShoeSize)
+mean(females$Height)
+ 
+``` 
+Answer: Males have bigger average shoe size and are taller. Females have smaller average shoe size and are shorter. Within each group, bigger shoe size still means taller — but gender is also a big factor that changes the whole group average.
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
