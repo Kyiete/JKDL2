@@ -1,0 +1,249 @@
+---
+title: "RExercise#7_Divinagracia"
+author: "John Kyiete Divinagracia"
+date: "2026-11-08"
+output: html_document
+---
+Part A — Creating Data Frames
+ 
+ 
+ 
+Question #1
+ 
+Note: Replace example values with your actual data from Figure 1.
+ 
+Create vectors and check lengths
+ 
+
+ 
+```{r}
+  
+Respondent <- 1:20
+Sex <- c(1, 1, 2, 2, 1, 2, 1, 2, 1, 1, 2, 2, 1, 2, 1, 1, 2, 1, 2, 1)
+FathersOccupation <- c(1, 2, 3, 1, 1, 2, 3, 1, 1, 2, 1, 3, 1, 2, 1, 1, 2, 1, 3, 1)
+PersonsAtHome <- c(5, 4, 6, 3, 7, 5, 4, 6, 5, 4, 8, 3, 5, 4, 6, 5, 7, 4, 5, 6)
+SiblingsAtSchool <- c(2, 1, 3, 1, 2, 2, 0, 2, 1, 1, 3, 0, 2, 1, 2, 2, 3, 1, 2, 2)
+TypesOfHouses <- c(1, 2, 1, 3, 2, 1, 2, 3, 1, 2, 1, 2, 3, 1, 2, 1, 2, 1, 3, 2)
+
+length(Respondent)
+length(Sex)
+length(FathersOccupation)
+length(PersonsAtHome)
+length(SiblingsAtSchool)
+length(TypesOfHouses)
+``` 
+ 
+Answer:
+All vectors show length = 20.
+ 
+ 
+ 
+Combine into a data frame
+ 
+```{r}
+  
+survey <- data.frame(
+  Respondent = Respondent,
+  Sex = Sex,
+  FathersOccupation = FathersOccupation,
+  PersonsAtHome = PersonsAtHome,
+  SiblingsAtSchool = SiblingsAtSchool,
+  TypesOfHouses = TypesOfHouses
+)
+
+print(survey)
+ 
+``` 
+Answer:
+A table with 20 rows and 6 columns appears, showing all survey values.
+ 
+ 
+ 
+Describe the data
+ 
+ 
+```{r}
+  
+str(survey)
+summary(survey)
+ 
+```
+Answer:
+str() shows all columns are stored as integers. summary() shows the minimum, mean, median, and maximum for each column.
+ 
+ 
+ 
+Check dimensions
+ 
+ 
+```{r}
+  
+dim(survey)
+nrow(survey)
+ncol(survey)
+ 
+``` 
+Answer:
+20 rows and 6 columns.
+ 
+ 
+ 
+Create factors
+ 
+ 
+```{r}
+  
+survey$Sex <- factor(survey$Sex,
+                     levels = c(1, 2),
+                     labels = c("Male", "Female"))
+
+survey$FathersOccupation <- factor(survey$FathersOccupation,
+                                   levels = c(1, 2, 3),
+                                   labels = c("Farmer", "Driver", "Others"))
+
+survey$TypesOfHouses <- factor(survey$TypesOfHouses,
+                               levels = c(1, 2, 3),
+                               labels = c("Wood", "Semi-Concrete", "Concrete"))
+ 
+``` 
+Answer:
+Sex, FathersOccupation, and TypesOfHouses now show text labels instead of numbers.
+ 
+ 
+ 
+Get the mean for all columns
+ 
+ 
+```{r}
+  
+sapply(survey[, c("PersonsAtHome", "SiblingsAtSchool")], mean)
+ 
+``` 
+Answer:
+PersonsAtHome mean = 5.1. SiblingsAtSchool mean = 1.75. Categorical columns cannot be averaged.
+ 
+ 
+ 
+Extract first 5 rows
+ 
+
+ 
+```{r}
+  
+survey[1:5, ]
+ 
+``` 
+Answer:
+The first 5 rows of the data frame are displayed.
+ 
+ 
+ 
+Select TypesOfHouses
+ 
+
+```{r}
+  
+types_houses <- survey$TypesOfHouses
+types_houses
+ 
+``` 
+Answer:
+A list showing the house type for each respondent.
+ 
+ 
+ 
+Select Males with father = Farmer
+ 
+ 
+```{r}
+  
+subset(survey, Sex == "Male" & FathersOccupation == "Farmer")
+ 
+``` 
+Answer:
+Shows only respondents who are Male and whose father is a Farmer.
+ 
+ 
+ 
+Select Females with siblings ≥ 5
+ 
+
+ 
+```{r}
+  
+subset(survey, Sex == "Female" & SiblingsAtSchool >= 5)
+ 
+``` 
+Answer:
+Shows only Female respondents with 5 or more siblings at school. If none match, the result will be empty.
+ 
+ 
+ 
+Question #2
+ 
+Answer:
+This check is necessary because every row represents one person's answers. If vectors have different lengths, answers will become misaligned — one person's answer could be paired with another person's data, making the dataset unreliable.
+ 
+ 
+ 
+Question #3
+ 
+Answer:
+Categories represented by numbers are Sex, FathersOccupation, and TypesOfHouses. Actual counts are PersonsAtHome and SiblingsAtSchool. Averaging categories like Sex is misleading because the number is only a label. An "average of 1.5" does not represent a real group or value — it is just a calculation with no real meaning.
+ 
+ 
+ 
+Question #4
+ 
+Answer:
+Without the legend, someone might think "1" is a score or a rank instead of a category. This shows that coded data is unclear without labels. Numbers alone do not explain what they stand for.
+ 
+ 
+ 
+Question #5
+ 
+```{r}
+  
+nrow(subset(survey, Sex == "Male"))
+sum(survey$Sex == "Male")
+``` 
+ 
+Answer:
+In this example, 11 out of 20 are Male. Your result may differ. Yes, this small sample makes me less confident. Results from 20 people can be easily skewed by chance. We cannot be certain the same patterns would appear in a larger group.
+ 
+ 
+ 
+Question #6
+ 
+Answer:
+R treats all numbers as numeric by default. It does not know what the numbers mean — only what format they are stored in. This shows that how data is stored is different from what it represents. We must tell R which columns are categories using the factor() function.
+ 
+ 
+ 
+Question #7
+ 
+Answer:
+The mean of PersonsAtHome is meaningful because it measures a real quantity. The mean of Sex is not meaningful because Sex is a category label, not a measurement. Averaging categories produces a number that has no real-world interpretation.
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
