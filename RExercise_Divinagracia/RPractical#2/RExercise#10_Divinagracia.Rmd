@@ -1,0 +1,381 @@
+---
+title: "RExercise#10"
+author: "John Kyiete Divinagracia"
+date: "2026-11-27"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+Part A — Predict the Output
+ 
+Question #1
+ 
+```{r}
+  
+m <- matrix(1:6, nrow = 2)
+m
+ 
+``` 
+ V1 V2 V3 
+1 1 3 5 
+2 2 4 6 
+ 
+a)  apply(m, 1, sum) 
+
+```{r}
+  
+apply(m, 1, sum)
+ 
+``` 
+Output:  1  9  /  14 
+It sums each row: Row 1 = 1+3+5 = 9, Row 2 = 2+4+6 = 14.
+ 
+b)  apply(m, 2, sum) 
+ 
+```{r}
+  
+apply(m, 2, sum)
+ 
+``` 
+Output:  [1] 3  7  11 
+It sums each column: Col 1 = 1+2 = 3, Col 2 = 3+4 = 7, Col 3 = 5+6 = 11.
+ 
+c)  class(lapply(1:3, function(i) i^2)) 
+ 
+```{r}
+  
+class(lapply(1:3, function(i) i^2))
+ 
+``` 
+Output:  [1] "list" 
+ lapply()  always returns a list, even when the results are simple numbers.
+ 
+d)  sapply(1:3, function(i) i^2) 
+ 
+```{r}
+  
+sapply(1:3, function(i) i^2)
+ 
+``` 
+Output:  [1] 1  4  9 
+ sapply()  simplifies the result into a vector: 1²=1, 2²=4, 3²=9.
+ 
+e)  sapply(c('a', 'bb', 'ccc'), nchar) 
+ 
+```{r}
+  
+sapply(c('a', 'bb', 'ccc'), nchar)
+``` 
+ 
+Output:  [1] 1  2  3 
+It returns the number of characters in each string as a simple vector.
+ 
+f)  mapply(function(x, y) x * y, 1:3, 4:6) 
+ 
+```{r}
+  
+mapply(function(x, y) x * y, 1:3, 4:6)
+``` 
+ 
+Output:  [1] 4  10  18 
+It multiplies corresponding elements: 1×4=4, 2×5=10, 3×6=18.
+ 
+g)  tapply(c(10, 20, 30, 40), c('u', 'v', 'u', 'v'), sum) 
+ 
+```{r}
+  
+tapply(c(10, 20, 30, 40), c('u', 'v', 'u', 'v'), sum)
+``` 
+ 
+Output:
+  
+u  v
+40 60
+ 
+ 
+It groups values: u = 10+30 = 40, v = 20+40 = 60.
+ 
+ 
+ 
+Question #2
+ 
+```{r}
+  
+scores <- matrix(c(70, 85, 90,
+                   60, 75, 80,
+                   88, 92, 79),
+                 nrow = 3, byrow = TRUE,
+                 dimnames = list(c('Ana', 'Ben', 'Cara'), c('Math', 'Sci', 'Eng')))
+
+temps <- list(Mon = c(30, 32, 31), Tue = c(29, 33), Wed = c(31, 34, 35, 30))
+ 
+``` 
+b.1
+ 
+```{r}
+  
+# (a) Each student's average
+student_avg <- apply(scores, 1, mean)
+student_avg
+ 
+``` 
+Output:
+ 
+  
+     Ana      Ben     Cara
+81.66667 71.66667 86.33333
+ 
+ 
+Using  MARGIN = 1  means we calculate across rows (per student).
+ 
+```{r}
+  
+# (b) Each subject's highest score
+subject_high <- apply(scores, 2, max)
+subject_high
+ 
+``` 
+Output:
+  
+Math  Sci  Eng
+  88   92   90
+ 
+ 
+Using  MARGIN = 2  means we calculate down columns (per subject).
+ 
+```{r}
+  
+# (c) Best subject for each student
+best_subject <- colnames(scores)[apply(scores, 1, which.max)]
+best_subject
+ 
+``` 
+Output:
+ 
+
+  
+     Ana      Ben     Cara
+  "Eng"    "Eng"    "Sci"
+ 
+ 
+ which.max()  finds the column position of the highest score per row, then we get its name.
+ 
+b.2
+ 
+```{r}
+  
+# Mean using lapply() — returns a list
+temp_mean <- lapply(temps, mean)
+temp_mean
+``` 
+ 
+Output:
+ 
+  
+$Mon
+[1] 31
+
+$Tue
+[1] 31
+
+$Wed
+[1] 32.5
+ 
+ 
+ lapply()  always returns a list, keeping each day's result separate.
+ 
+```{r}
+  
+# Number of readings using sapply() — returns a vector
+temp_n <- sapply(temps, length)
+temp_n
+```
+Output:
+
+  
+Mon Tue Wed
+  3   2   4
+ 
+ 
+ sapply()  simplifies the list into a vector since all results are single values.
+ 
+```{r}
+  
+# Range using vapply() — returns a matrix
+temp_range <- vapply(temps, function(x) c(min(x), max(x)), numeric(2))
+temp_range
+ 
+``` 
+Output:
+  
+     Mon Tue Wed
+[1,]  30  29  30
+[2,]  32  33  35
+ 
+ 
+The range result is a matrix because each call returns two values (min and max), so R stacks them into rows instead of a vector.
+ 
+ 
+ 
+Question #3
+ 
+```{r}
+# Final amount for each loan
+principals <- c(1000, 2000)
+rates <- c(0.05, 0.04)
+terms <- c(2, 3)
+
+mapply(function(p, r, n) p * (1 + r)^n, principals, rates, terms)
+ 
+``` 
+Output:
+ 
+  
+[1] 1102.50 2249.73
+ 
+ 
+First loan: 1000 × 1.05² = 1102.50; Second loan: 2000 × 1.04³ = 2249.73.
+ 
+```{r}
+  
+# Fixed rate at 4.5% using MoreArgs
+mapply(function(p, r, n) p * (1 + r)^n,
+       p = principals,
+       n = terms,
+       MoreArgs = list(r = 0.045))
+ 
+``` 
+Output:
+ 
+
+  
+[1] 1092.025 2282.323
+ 
+ 
+ MoreArgs  holds constant arguments across all calls, so both loans use 4.5%.
+ 
+ 
+ 
+Question #4
+ 
+```{r}
+  
+# (a) Mean Sepal.Length per species in iris
+tapply(iris$Sepal.Length, iris$Species, mean)
+ 
+``` 
+Output:
+ 
+  
+    setosa versicolor  virginica
+     5.006      5.936      6.588
+ 
+ 
+ Species  is the grouping variable;  tapply()  computes the mean within each group.
+ 
+```{r}
+  
+# (b) Number of cars per cyl-am combination in mtcars
+table(mtcars$cyl, mtcars$am)
+# Or using tapply:
+tapply(mtcars$mpg, list(mtcars$cyl, mtcars$am), length)
+ 
+``` 
+Output shows counts for each cylinder-automatic/manual group combination.
+ 
+```{r}
+  
+# (c) Mean mpg per cylinder, ignoring missing values
+tapply(mtcars$mpg, mtcars$cyl, mean, na.rm = TRUE)
+ 
+``` 
+Output:
+ 
+  
+       4        6        8
+26.66364 19.74286 15.10000
+ 
+ 
+ na.rm = TRUE  ensures missing values don't cause errors or skew the result.
+ 
+ 
+ 
+Part B — Debugging
+ 
+Question #5
+ 
+1)  sapply(list(a = 1:3, b = 4:6), mean()) 
+Mistake: Called  mean()  with parentheses instead of passing the function name.
+Fix:
+ 
+```{r}
+  
+sapply(list(a = 1:3, b = 4:6), mean)
+ 
+```
+Functions are passed without  ()  —  mean()  runs immediately once;  mean  is the function itself to be applied to each element.
+ 
+ 
+ 
+2)  apply(matrix(1:6, nrow = 3), 1, mean)  — "expected one mean per column, got three numbers"
+Mistake: Used  MARGIN = 1  (rows) instead of  MARGIN = 2  (columns).
+Fix:
+ 
+```{r}
+  
+apply(matrix(1:6, nrow = 3), 2, mean)
+ 
+``` 
+ MARGIN = 1  processes rows;  MARGIN = 2  processes columns. Choose the dimension you want results for.
+ 
+ 
+ 
+3)  apply(df, 2, class)  — "wanted the class of each column"
+Mistake:  apply()  converts the data frame to a matrix first, so all columns become the same type.
+Fix:
+ 
+```{r}
+  
+sapply(df, class)
+# Or:
+lapply(df, class)
+ 
+``` 
+ lapply()  and  sapply()  preserve the data frame structure and keep each column's original class.
+ 
+ 
+ 
+Question #6
+ 
+Difference between  lapply()  and  sapply() :
+ lapply()  always returns a list, keeping results separate but consistent.  sapply()  tries to simplify that list into a vector or matrix when every result has the same shape, making output easier to read.
+ 
+When to choose  vapply() :
+Use  vapply()  when you want to enforce exactly what type and shape your result should be. It’s safer because it throws an error if something unexpected happens, instead of silently giving a different structure.
+ 
+Same as  lapply(split(x, g), mean)  in one call:
+Use  tapply(x, g, mean) . It returns a vector (or array) where each element is the mean of one group, with group names as labels.
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
